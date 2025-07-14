@@ -4,7 +4,7 @@ A plugin for Windows that opens windows explorer with the current file focused
 ## Requirements
 
 - Windows OS
-- `cygpath` utility (usually included with Git for Windows or Cygwin)
+- `cygpath` utility (usually included with Git for Windows or Cygwin, only required if typing UNIX style paths, e.g. ~/mydir)
 
 The plugin uses `cygpath` to convert Unix-style or Windows paths to a format suitable for Windows Explorer. It will attempt to use `cygpath` from your system `PATH`, and if not found, will try `C:/Program Files/Git/usr/bin/cygpath.exe` (the default location for Git Bash).
 
