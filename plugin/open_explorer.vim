@@ -32,7 +32,21 @@ if has('win32') || has('win64')
       echoerr 'No file to open in Explorer.'
     endif
   endfunction
-  command! -nargs=? Ex call OpenExplorer(<f-args>)
+  function! s:ExComplete(A, L, P) abort
+    let l:pat = a:A
+    if stridx(l:pat, '~') == 0
+      let l:pat = expand(l:pat)
+    endif
+    let l:globres = glob(l:pat.'*', 0, 1)
+    if type(l:globres) != type([])
+      let l:globres = []
+    endif
+    if empty(l:globres)
+      return []
+    endif
+    return map(l:globres, 'isdirectory(v:val) ? v:val."/" : v:val')
+  endfunction
+  command! -nargs=? -complete=customlist,s:ExComplete Ex call OpenExplorer(<f-args>)
 else
   function! OpenExplorer(...) abort
     " Do nothing on non-Windows
