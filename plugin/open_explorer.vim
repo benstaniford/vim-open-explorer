@@ -4,7 +4,15 @@
 " License: MIT
 
 if has('win32') || has('win64')
-  function! OpenExplorer()
+  function! OpenExplorer(...) abort
+    if a:0 > 0 && !empty(a:1)
+      let l:target = a:1
+      if isdirectory(l:target)
+        let l:cmd = 'explorer "' . substitute(fnamemodify(l:target, ':p'), '/', '\\', 'g') . '"'
+        silent execute '!'.l:cmd
+        return
+      endif
+    endif
     let l:filepath = expand('%:p')
     if filereadable(l:filepath)
       let l:cmd = 'explorer /select,"' . substitute(l:filepath, '/', '\\', 'g') . '"'
@@ -13,10 +21,10 @@ if has('win32') || has('win64')
       echoerr 'No file to open in Explorer.'
     endif
   endfunction
-  command! Explorer call OpenExplorer()
+  command! -nargs=? Explorer call OpenExplorer(<f-args>)
 else
-  function! OpenExplorer()
+  function! OpenExplorer(...) abort
     " Do nothing on non-Windows
   endfunction
-  command! Explorer call OpenExplorer()
+  command! -nargs=? Explorer call OpenExplorer(<f-args>)
 endif
